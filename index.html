@@ -105,6 +105,8 @@
 
 <body>
   <img src="./rat.png" alt="Rat Gamers" class="darat">
+  <link rel="preload" href="./ratdon.png" as="image">
+
   <h1 class="title">Rat Gamers</h1>
   <h1 class="subtitle">Click the rat</h1>
   <div class="ratcontainer"></div>
@@ -177,6 +179,18 @@
       document.body.style.backgroundColor = 'black';
     }
 
+    function typeSubtitle(fullMessage) {
+      let progress = 0;
+      const typewriter = setInterval(() => {
+        if (progress > fullMessage.length) {
+          clearInterval(typewriter);
+          return;
+        }
+        subtitle.innerHTML = fullMessage.slice(0, progress);
+        progress++;
+      }, 200);
+    }
+
     const intervals = [];
     const drops = [
       [6.782, () => {
@@ -196,7 +210,7 @@
       [12.725, () => {
         subtitle.style.display = 'block';
         subtitle.style.animation = 'none';
-        subtitle.innerHTML = 'Stay tuned...';
+        subtitle.innerHTML = 'Presents:';
         subtitle.classList.add('shadowed');
       }],
       [13.160, () => {
@@ -228,9 +242,14 @@
       }],
       [20.336, () => { }],
 
-      [22.840, () => createRat(16)],
+      [22.840, () => {
+        createRat(16);
+        subtitle.innerHTML = '';
+      }],
       [23.250, () => createRat(17)],
-      [23.687, () => createRat(14)],
+      [23.687, () => {
+        createRat(14);
+      }],
 
       [26.227, () => createRat(4)],
       [26.654, () => createRat(7)],
@@ -245,10 +264,16 @@
           createRat();
         }, 400));
         intervals.push(setInterval(randomizeBodyColor, 400));
+        typeSubtitle('Boss is very busy, capeesh?');
+      }],
+
+      [61.0855 - 0.100, () => {
+        typeSubtitle('The Don will see yous shortly...');
       }],
 
       [60 + 40.602, reset],
       [60 + 41.029, () => {
+        darat.src = './ratdon.png';
         subtitle.innerHTML = 'Coming 2026';
       }],
       [3600, () => {
