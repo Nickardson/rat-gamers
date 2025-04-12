@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rat Gamers</title>
+  <style>
+    body {
+      height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .title,
+    .subtitle {
+      font-family: 'Courier New', Courier, monospace;
+      text-align: center;
+      position: fixed;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+
+    .title {
+      font-size: 10vmin;
+      top: 20%;
+      transform: translate(-50%, -50%);
+    }
+
+    .subtitle {
+      font-size: 5vmin;
+      top: 70%;
+      animation: blink 2s infinite;
+    }
+
+    .shadowed {
+      color: #fff;
+      text-shadow: 0 0 5px #000, 0 0 10px #000, 0 0 15px #000, 0 0 20px #000, 0 0 25px #000, 0 0 30px #000,
+        0 0 35px #000, 0 0 40px #000;
+    }
+
+    .darat {
+      width: 60vmin;
+      aspect-ratio: 631 / 395;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+
+      cursor: pointer;
+
+      animation-duration: 3600s;
+      animation-timing-function: linear;
+      animation-direction: alternate-reverse;
+      animation-iteration-count: infinite;
+    }
+
+    .ratcontainer {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      mix-blend-mode: darken;
+    }
+
+    .rat {
+      mix-blend-mode: darken;
+    }
+
+    @keyframes rotate {
+      from {
+        transform: translate(-50%, -50%) rotate(4800deg) scale(40);
+      }
+
+      to {
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+      }
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      30% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+
+      70% {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <img src="./rat.png" alt="Rat Gamers" class="darat">
+  <h1 class="title">Rat Gamers</h1>
+  <h1 class="subtitle">Click the rat</h1>
+  <div class="ratcontainer"></div>
+
+  <audio id="musak" preload="auto">
+    <source src="./monstruo.mp3" type="audio/mp3">
+    Your browser does not support audio elements :(
+  </audio>
+
+  <script>
+    const title = document.querySelector('.title');
+    const subtitle = document.querySelector('.subtitle');
+    const darat = document.querySelector('.darat');
+    const ratContainer = document.querySelector('.ratcontainer');
+    const musak = document.getElementById('musak');
+
+    title.style.display = 'none';
+
+    function randomizeTextColors() {
+      let randomColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+      title.style.color = randomColor;
+      randomColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+      subtitle.style.color = randomColor;
+    }
+    function randomizeBodyColor() {
+      let randomColor = `hsl(${Math.random() * 360}, 30%, 80%)`;
+      document.body.style.backgroundColor = randomColor;
+    }
+
+    const createdRatIds = new Set();
+    const maxRatId = 20;
+    function createRat(overrideId) {
+      const rat = document.createElement('img');
+      let id;
+      if (overrideId) {
+        id = overrideId;
+      } else {
+        for (let i = 0; i < 10; i++) {
+          id = Math.floor(Math.random() * (maxRatId + 1));
+          if (!createdRatIds.has(id)) {
+            break;
+          }
+        }
+      }
+
+      createdRatIds.add(id);
+
+      rat.src = `./anirat${id}.gif`;
+      rat.alt = 'Rat Gamers';
+      rat.classList.add('rat');
+      rat.style.position = 'absolute';
+      rat.style.left = `${Math.random() * 100}vw`;
+      rat.style.top = `${Math.random() * 100}vh`;
+      let rot = Math.random() * 360 - 180;
+      rot *= createdRatIds.size / maxRatId;
+      rat.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
+      ratContainer.appendChild(rat);
+    }
+
+    function reset() {
+      ratContainer.innerHTML = '';
+
+      intervals.forEach((i) => {
+        clearInterval(i);
+      });
+
+      title.style.color = 'white';
+      subtitle.style.color = 'white';
+
+      document.body.style.backgroundColor = 'black';
+    }
+
+    const intervals = [];
+    const drops = [
+      [6.782, () => {
+        title.style.display = 'block';
+      }],
+
+      [9.312, () => {
+        title.classList.add('shadowed');
+      }],
+      [9.736, () => {
+        title.classList.remove('shadowed');
+      }],
+      [10.185, () => {
+        title.classList.add('shadowed');
+      }],
+
+      [12.725, () => {
+        subtitle.style.display = 'block';
+        subtitle.style.animation = 'none';
+        subtitle.innerHTML = 'Stay tuned...';
+        subtitle.classList.add('shadowed');
+      }],
+      [13.160, () => {
+        subtitle.classList.remove('shadowed');
+      }],
+      [13.579, () => {
+        subtitle.classList.add('shadowed');
+      }],
+
+      [16.095, () => {
+        randomizeTextColors();
+      }],
+      [16.529, () => {
+        randomizeTextColors();
+      }],
+      [16.942, () => {
+        title.style.color = 'white';
+        subtitle.style.color = 'white';
+      }],
+
+      [19.482, () => {
+        randomizeTextColors();
+      }],
+      [19.909, () => {
+        randomizeTextColors();
+      }],
+      [20.336 - 0.200, () => {
+        intervals.push(setInterval(randomizeTextColors, 200));
+      }],
+      [20.336, () => { }],
+
+      [22.840, () => createRat(16)],
+      [23.250, () => createRat(17)],
+      [23.687, () => createRat(14)],
+
+      [26.227, () => createRat(4)],
+      [26.654, () => createRat(7)],
+      [27.088, () => createRat(20)],
+
+      [29.600, createRat],
+      [30.041, createRat],
+      [30.446, createRat],
+
+      [33.985, () => {
+        intervals.push(setInterval(() => {
+          createRat();
+        }, 400));
+        intervals.push(setInterval(randomizeBodyColor, 400));
+      }],
+
+      [60 + 40.602, reset],
+      [60 + 41.029, () => {
+        subtitle.innerHTML = 'Coming 2026';
+      }],
+      [3600, () => {
+        subtitle.innerHTML = 'i love rats';
+      }],
+    ];
+
+    function clickRat() {
+      darat.removeEventListener('click', clickRat);
+
+      subtitle.style.display = 'none';
+      darat.style.animationName = 'rotate';
+
+      musak.play();
+      drops.forEach(([time, callback]) => {
+        const delay = time * 1000;
+        // const delay = i * 1000;
+        setTimeout(() => {
+          callback();
+        }, delay);
+      });
+    }
+    darat.addEventListener('click', clickRat);
+  </script>
+</body>
+
+<!-- Rats courtesy of https://web.archive.org/web/20090808003132/http://geocities.com/drratran/Roaming_Rats.html -->
+
+</html>
